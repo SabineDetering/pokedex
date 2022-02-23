@@ -1,7 +1,55 @@
-.small-pokecard{
-    border-radius:10px;
-    width:260px;
+:root {
+    --bg-bug: #9ACD32;
+    --bg-crypto: #834196;
+    --bg-dragon: #6699CC;
+    --bg-electric: #F5C826;
+    --bg-fairy: #D685AD;
+    --bg-fighting: #993300;
+    --bg-fire: #F08030;
+    --bg-flying: #A890F0;
+    --bg-ghost: #bfaeda;
+    --bg-grass: #78C850;
+    --bg-ground: #e0cc94;
+    --bg-ice: #98D8D8;
+    --bg-normal: #A8A878;
+    --bg-poison: #A040A0;
+    --bg-psychic: #F85888;
+    --bg-rock: #99700D;
+    --bg-steel: #B8B8D0;
+    --bg-water: #acc9e6;
 }
-.small-pokecard img{
-    width:50%;
+
+
+body {
+    font-family: 'Nunito', sans-serif;
+}
+
+.small-pokecard {
+    border-radius: 20px;
+    width: 260px;
+    color: white;
+}
+
+.small-pokecard img {
+    width: 50%;
+    object-fit: contain;
+    display: block;
+}
+
+.small-pokecard h2 {
+    font-weight: 900;
+    ;
+}
+
+/* .small-pokecard+.small-pokecard {
+    margin-left: 16px;
+    margin-bottom: 16px;
+} */
+
+.type {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+}
+.type+.type{
+    margin-top:0.5em;
 }
