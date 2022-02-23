@@ -7,13 +7,15 @@
     <title>Pokédex</title>
 <script src="script.js">   
 </script>
+<link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="style.css">
 
 </head>
-<body onload="loadPokemon()">
-    <div id="pokemon-container">
-        <h1>currentPokemon.name</h1>
-        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/4.png" alt="">
+<body onload="load(5)">
+    <!-- overview -->
+    <div class=" container">
+        <h1>Pokedex</h1>
+        <div id="small-cards" class=" container d-flex flex-wrap"></div>
     </div>
     
 </body>

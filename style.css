@@ -1,0 +1,7 @@
+.small-pokecard{
+    border-radius:10px;
+    width:260px;
+}
+.small-pokecard img{
+    width:50%;
+}
