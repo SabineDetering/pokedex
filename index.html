@@ -17,14 +17,28 @@
 
 </head>
 
-<body onload="load(20)">
+<body onload="load(40)">
     <!-- overview -->
     <div class=" container">
-        <!-- <h1>Pokedex</h1> -->
+
         <img src="./img/pokedex.png" style="width:200px;max-width:50vw;">
-        <div id="small-cards" class=" container p-0 d-flex flex-wrap"></div>
+        <div id="small-cards" class=" container p-0 d-flex flex-wrap">
+        </div>
     </div>
 
+    <!-- setting for single card view -->
+    <div id="blur" class="d-none " onclick="closeBigCard()"></div>
+
+    <div id="big-card" class="container p-4 d-none">
+        <div id="nav" class="container d-flex justify-content-between">
+            <img src="./img/arrow-left.png" alt="">
+            <img src="./img/arrow-right.png" alt="">
+        </div>
+        <div id="header" class="container mt-4">
+        </div>
+        <div id="info-cont" class="container">
+        </div>
+    </div>
 </body>
 
 </html>
