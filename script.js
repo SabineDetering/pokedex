@@ -42,16 +42,23 @@ function extractFeatures(pokemon) {
     for (let i = 1; i < pokemon.abilities.length; i++) {
         abilities += ', ' + capFirstLetter(pokemon.abilities[i].ability.name);
     }
-    // let moves = capFirstLetter(pokemon.moves[0].move.name);
-    // for (let i = 1; i < pokemon.moves.length; i++) {
-    //     moves += ', ' + capFirstLetter(pokemon.moves[i].move.name);
-    // }
+    let hp = pokemon.stats[0].base_stat;
+    let attack = pokemon.stats[1].base_stat;
+    let defense = pokemon.stats[2].base_stat;
+    let specialAttack = pokemon.stats[3].base_stat;
+    let specialDefense = pokemon.stats[4].base_stat;
+    let speed = pokemon.stats[5].base_stat;
+    let baseStatTotal = hp + attack + defense + specialAttack + specialDefense + speed;
+    let baseStatAvg = (baseStatTotal / 6).toFixed(1);
+    let baseExp = pokemon.base_experience;
+
     let moves = [];
     for (let i = 0; i < pokemon.moves.length; i++) {
         moves.push(capFirstLetter(pokemon.moves[i].move.name));
     }
+    let items = pokemon.items;
 
-    pokeExtract[pokeId] = { pokeId, name, image, mainType, secondType, species, height, weight, abilities, moves };
+    pokeExtract[pokeId] = { pokeId, name, image, mainType, secondType, species, height, weight, abilities, hp, attack, defense, specialAttack, specialDefense, speed, baseStatTotal, baseStatAvg, baseExp, moves,items };
 }
 
 function renderSmallCard(id) {
@@ -60,7 +67,7 @@ function renderSmallCard(id) {
     let pokemon = pokeExtract[id];
 
     cards.innerHTML += ` 
-    <div id='card-${pokemon.pokeId}' class="small-card container m-2 p-4" onclick="showBigCard(${pokemon.pokeId})">
+    <div id='card-${pokemon.pokeId}' class="small-card container-lg m-2 p-4" onclick="showBigCard(${pokemon.pokeId})">
         <div  class="d-flex justify-content-between"> 
             <h2>${capFirstLetter(pokemon.name)}</h2>
             <h4 >#${pokemon.pokeId}</h4>
@@ -78,10 +85,10 @@ function renderSmallCard(id) {
 
 function renderTypeDivs(main, second) {
     let htmlcode =
-        `<div class="type mt-1 me-1 px-3 py-2">${capFirstLetter(main)}</div>`;
+        `<div class="type mt-1 me-1 px-2 py-1">${capFirstLetter(main)}</div>`;
     if (second) {
         htmlcode += `
-        <div class="type mt-1 px-3 py-2">${capFirstLetter(second)}</div>`;
+        <div class="type mt-1 px-2 py-1">${capFirstLetter(second)}</div>`;
     }
     return htmlcode;
 }
@@ -150,41 +157,75 @@ function renderHeader() {
 function renderInfos() {
     changeTabColor();
     renderAbout();
+    renderBaseStats();
     renderMoves();
+    colorizeInnerBorders();
+}
+function colorizeInnerBorders() {
+
+    colorizeBorder("td");
+    colorizeBorder("tfoot");
+    colorizeBorder(".move");
+    colorizeBorder("td");
+    colorizeBorder("td");
+}
+
+function colorizeBorder(element) {
+    let elements = document.querySelectorAll(`${element}`);
+    for (let i = 0; i < elements.length; i++) {
+        elements[i].style.borderColor = `var(--bg-${currPokemon.mainType}`;
+    }
 }
 function changeTabColor() {
     let links = document.querySelectorAll(".nav-link");
     for (let i = 0; i < links.length; i++) {
         links[i].style.color = "black";
-        links[i].style.backgroundColor = "white";
+        links[i].style.backgroundColor = "#f9f9de";
     }
     let active = document.querySelector(".nav-link.active");
     active.style.backgroundColor = `var(--bg-${currPokemon.mainType}`;
-    active.style.color = "white";
+    active.style.color = "#f9f9de";
+}
+function calcInfoHeight() {
+    let content = getId('tab-content');
+    let bigCard = getId('big-card');
+    maxHeight = Math.min(window.innerHeight - content.getBoundingClientRect().top - 16, bigCard.getBoundingClientRect().bottom - content.getBoundingClientRect().top);
+    return maxHeight;
 }
 
 function renderAbout() {
-    let content = getId('tab-content');
     let about = getId('about');
+    about.style.maxHeight = `${calcInfoHeight()}px`;
 
-    let height = window.innerHeight - content.getBoundingClientRect().top - 24;
-    about.style.maxHeight = `${height}px`;
     getId('species').innerHTML = currPokemon.species;
     getId('height').innerHTML = currPokemon.height;
     getId('weight').innerHTML = currPokemon.weight;
     getId('abilities').innerHTML = currPokemon.abilities;
 }
+
+function renderBaseStats() {
+    let base = getId('base');
+    base.style.maxHeight = `${calcInfoHeight()}px`;
+
+    getId('hp').innerHTML = currPokemon.hp;
+    getId('attack').innerHTML = currPokemon.attack;
+    getId('defense').innerHTML = currPokemon.defense;
+    getId('sp-attack').innerHTML = currPokemon.specialAttack;
+    getId('sp-defense').innerHTML = currPokemon.specialDefense;
+    getId('speed').innerHTML = currPokemon.speed;
+    getId('total').innerHTML = currPokemon.baseStatTotal;
+    getId('avg').innerHTML = currPokemon.baseStatAvg;    
+}
+
 function renderMoves() {
-    let content = getId('tab-content');
     let moves = getId('moves');
 
-    let height = window.innerHeight - content.getBoundingClientRect().top - 24;
-    moves.style.maxHeight = `${height}px`;
+    moves.style.maxHeight = `${calcInfoHeight()}px`;
     moves.innerHTML = '';
     for (let i = 0; i < currPokemon.moves.length; i++) {
         const move = currPokemon.moves[i];
         moves.innerHTML += `
-        <div class="move text-nowrap p-2 text-center m-1">${move}</div>
+        <div class="move text-nowrap p-1 text-center m-1">${move}</div>
         `;
     }
 }
