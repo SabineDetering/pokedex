@@ -86,6 +86,7 @@ h4 {
     transform: translateX(-50%);
     width: 400px;
     max-width: 80vw;
+    max-height: 100vh;
     border-radius: var(--bd-radius);
 }
 
@@ -126,5 +127,3 @@ h4 {
     margin-top: calc(-2em - 20px);
     background-color: white;
 }
-
-#info-cont {}

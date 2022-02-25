@@ -9,14 +9,12 @@ function capFirstLetter(string) {
     return string[0].toUpperCase() + string.slice(1);
 }
 
-
 // loading parallel?
 async function load(maxNumber) {
     for (let i = 1; i <= maxNumber; i++) {
         await loadPokemon(i);
     }
 }
-
 async function loadPokemon(id) {
     let url = `https://pokeapi.co/api/v2/pokemon/${id}`;
     let response = await fetch(url);
@@ -27,9 +25,6 @@ async function loadPokemon(id) {
 }
 
 function extractFeatures(pokemon) {
-    // let index = i - 1;//Index in array 1 lower than id
-    // const pokemon = pokeInfos[index];
-
     let pokeId = pokemon.id;
     let name = pokemon.name;
     let image = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pokeId}.png`;
@@ -40,7 +35,19 @@ function extractFeatures(pokemon) {
     if (types.length == 2) {
         secondType = types[1].type.name;
     }
-    pokeExtract[pokeId] = { pokeId, name, image, mainType, secondType };
+    let species = capFirstLetter(pokemon.species.name);
+    let height = (pokemon.height * 10).toString() + ' cm';
+    let weight = (pokemon.weight / 10).toFixed(1) + ' kg';
+    let abilities = capFirstLetter(pokemon.abilities[0].ability.name);
+    for (let i = 1; i < pokemon.abilities.length; i++) {
+        abilities += ', ' + capFirstLetter(pokemon.abilities[i].ability.name);
+    }
+    let moves = capFirstLetter(pokemon.moves[0].move.name);
+    for (let i = 1; i < pokemon.moves.length; i++) {
+        moves += ', ' + capFirstLetter(pokemon.moves[i].move.name);
+    }
+
+    pokeExtract[pokeId] = { pokeId, name, image, mainType, secondType, species, height, weight, abilities, moves };
 }
 
 function renderSmallCard(id) {
@@ -87,15 +94,11 @@ function colorizeCard(cardid, main, second) {
 function showBigCard(id) {
     getId('blur').classList.remove('d-none');
     document.body.style = 'overflow:hidden;';
-    // getId('big-card-upper').classList.remove('d-none');
-    // getId('big-card-lower').classList.remove('d-none');
     renderBigCard(id);
 }
 function closeBigCard() {
     getId('blur').classList.add('d-none');
     document.body.style = 'overflow:auto;';
-    // getId('big-card-upper').classList.add('d-none');
-    // getId('big-card-lower').classList.add('d-none');
 }
 
 function renderBigCard(id) {
@@ -111,10 +114,10 @@ function renderNav(id) {
         getId('arrow-left').onclick = function () { closeBigCard(); }
     }
 
-    if (id < pokeExtract.length-1) {
+    if (id < pokeExtract.length - 1) {
         getId('arrow-right').onclick = function () { renderBigCard(id + 1); };
     } else {
-        getId('arrow-right').onclick = async function () { await loadPokemon(id + 1);  renderBigCard(id + 1); }
+        getId('arrow-right').onclick = async function () { await loadPokemon(id + 1); renderBigCard(id + 1); }
     }
 }
 function renderHeader() {
@@ -139,8 +142,22 @@ function renderHeader() {
     colorizeCard('big-card-upper', currPokemon.mainType, currPokemon.secondType);
 }
 
-
 function renderInfos() {
-    
+    renderAbout();
+    renderMoves();
 }
+function renderAbout() {
+    getId('species').innerHTML = currPokemon.species;
+    getId('height').innerHTML = currPokemon.height;
+    getId('weight').innerHTML = currPokemon.weight;
+    getId('abilities').innerHTML = currPokemon.abilities;
+}
+function renderMoves() {
+    let content = getId('tab-content');
+    let moves = getId('moves');
 
+    let height = window.innerHeight - content.getBoundingClientRect().top - 24;
+    moves.style.height = `${height}px`;
+    moves.innerHTML = currPokemon.moves;
+
+}
