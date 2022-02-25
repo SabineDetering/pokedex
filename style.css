@@ -34,6 +34,14 @@ h4 {
     font-weight: 700;
 }
 
+button {
+    color: black !important;
+    font-weight: 700;
+    transition: 225ms ease-in-out;
+    border-radius: var(--bd-radius) !important;
+}
+
+
 .small-card {
     border-radius: var(--bd-radius);
     ;
@@ -88,6 +96,7 @@ h4 {
     max-width: 80vw;
     max-height: 100vh;
     border-radius: var(--bd-radius);
+    box-shadow: 2px 2px 10px 3px #666666;
 }
 
 #big-card-upper, #big-card-lower {
@@ -126,4 +135,14 @@ h4 {
     border-radius: var(--bd-radius);
     margin-top: calc(-2em - 20px);
     background-color: white;
+    min-height:30vh;
+    height:50vh;
+}
+
+.move {
+    border: 1px solid;
+    flex: 1;
+    /* height:1em; */
+    box-sizing: content-box;
+    border-radius: var(--bd-radius);
 }

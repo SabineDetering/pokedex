@@ -29,7 +29,7 @@
 
     <!-- setting for single card view -->
     <div id="blur" class="d-none" onclick="closeBigCard()">
-        <div id="big-card" class="container ">
+        <div id="big-card" class="container  p-0">
             <div id="big-card-upper" class="container p-4" onclick="event.stopPropagation()">
                 <div class="container d-flex justify-content-center mb-2"><img src="./img/close-big.png"
                         onclick="closeBigCard()"></div>
@@ -43,22 +43,17 @@
             <div id="big-card-lower" class="container p-4" onclick="event.stopPropagation()">
 
                 <div id="info-cont" class="container ">
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="about-tab" data-bs-toggle="tab" data-bs-target="#about"
+                    <ul class="nav nav-fill nav-pills mb-2" role="tablist">
+                        <li class="nav-item " role="presentation">
+                            <button class="nav-link active" id="about-tab" onclick="changeTabColor()" data-bs-toggle="tab" data-bs-target="#about"
                                 type="button" role="tab" aria-controls="about" aria-selected="true">About</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="base-tab" data-bs-toggle="tab" data-bs-target="#base"
+                            <button class="nav-link" id="base-tab" onclick="changeTabColor()" data-bs-toggle="tab" data-bs-target="#base"
                                 type="button" role="tab" aria-controls="base" aria-selected="false">Base Stats</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="evolution-tab" data-bs-toggle="tab" data-bs-target="#evolution"
-                                type="button" role="tab" aria-controls="evolution"
-                                aria-selected="false">Evolution</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="moves-tab" data-bs-toggle="tab" data-bs-target="#moves"
+                            <button class="nav-link" id="moves-tab" onclick="changeTabColor()" data-bs-toggle="tab" data-bs-target="#moves"
                                 type="button" role="tab" aria-controls="moves" aria-selected="false">Moves</button>
                         </li>
                     </ul>
@@ -88,10 +83,7 @@
 
                         <div class="tab-pane fade" id="base" role="tabpanel" aria-labelledby="base-tab">Base Text</div>
 
-                        <div class="tab-pane fade" id="evolution" role="tabpanel" aria-labelledby="evolution-tab">
-                            evolution</div>
-
-                        <div class="tab-pane fade overflow-auto" id="moves" role="tabpanel" aria-labelledby="moves-tab">
+                        <div class="tab-pane fade overflow-auto d-flex flex-wrap" id="moves" role="tabpanel" aria-labelledby="moves-tab">
                             moves</div>
                     </div>
 

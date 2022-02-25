@@ -42,9 +42,13 @@ function extractFeatures(pokemon) {
     for (let i = 1; i < pokemon.abilities.length; i++) {
         abilities += ', ' + capFirstLetter(pokemon.abilities[i].ability.name);
     }
-    let moves = capFirstLetter(pokemon.moves[0].move.name);
-    for (let i = 1; i < pokemon.moves.length; i++) {
-        moves += ', ' + capFirstLetter(pokemon.moves[i].move.name);
+    // let moves = capFirstLetter(pokemon.moves[0].move.name);
+    // for (let i = 1; i < pokemon.moves.length; i++) {
+    //     moves += ', ' + capFirstLetter(pokemon.moves[i].move.name);
+    // }
+    let moves = [];
+    for (let i = 0; i < pokemon.moves.length; i++) {
+        moves.push(capFirstLetter(pokemon.moves[i].move.name));
     }
 
     pokeExtract[pokeId] = { pokeId, name, image, mainType, secondType, species, height, weight, abilities, moves };
@@ -103,6 +107,7 @@ function closeBigCard() {
 
 function renderBigCard(id) {
     currPokemon = pokeExtract[id];
+    getId('big-card').style.border = `2px solid var(--bg-${currPokemon.mainType})`;
     renderNav(id);
     renderHeader();
     renderInfos();
@@ -143,10 +148,27 @@ function renderHeader() {
 }
 
 function renderInfos() {
+    changeTabColor();
     renderAbout();
     renderMoves();
 }
+function changeTabColor() {
+    let links = document.querySelectorAll(".nav-link");
+    for (let i = 0; i < links.length; i++) {
+        links[i].style.color = "black";
+        links[i].style.backgroundColor = "white";
+    }
+    let active = document.querySelector(".nav-link.active");
+    active.style.backgroundColor = `var(--bg-${currPokemon.mainType}`;
+    active.style.color = "white";
+}
+
 function renderAbout() {
+    let content = getId('tab-content');
+    let about = getId('about');
+
+    let height = window.innerHeight - content.getBoundingClientRect().top - 24;
+    about.style.maxHeight = `${height}px`;
     getId('species').innerHTML = currPokemon.species;
     getId('height').innerHTML = currPokemon.height;
     getId('weight').innerHTML = currPokemon.weight;
@@ -157,7 +179,12 @@ function renderMoves() {
     let moves = getId('moves');
 
     let height = window.innerHeight - content.getBoundingClientRect().top - 24;
-    moves.style.height = `${height}px`;
-    moves.innerHTML = currPokemon.moves;
-
+    moves.style.maxHeight = `${height}px`;
+    moves.innerHTML = '';
+    for (let i = 0; i < currPokemon.moves.length; i++) {
+        const move = currPokemon.moves[i];
+        moves.innerHTML += `
+        <div class="move text-nowrap p-2 text-center m-1">${move}</div>
+        `;
+    }
 }
