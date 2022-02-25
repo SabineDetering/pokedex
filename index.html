@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pokédex</title>
+    <!-- <script src="bootstrap.min.js"></script> -->
     <script src="script.js"> </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,24 +22,70 @@
     <!-- overview -->
     <div class=" container">
 
-        <img src="./img/pokedex.png" style="width:200px;max-width:50vw;">
+        <img src="./img/pokemon.png" style="width:200px;max-width:50vw;">
         <div id="small-cards" class=" container p-0 d-flex flex-wrap">
         </div>
     </div>
 
     <!-- setting for single card view -->
-    <div id="blur" class="d-none " onclick="closeBigCard()"></div>
+    <div id="blur" class="d-none " onclick="closeBigCard()">
+        <div id="big-card" class="container ">
+            <div id="big-card-upper" class="container p-4" onclick="event.stopPropagation()">
+                <div class="container d-flex justify-content-center mb-2"><img src="./img/close-big.png"
+                        onclick="closeBigCard()"></div>
+                <div id="nav" class="container d-flex justify-content-between">
+                    <img id="arrow-left" src="./img/arrow-left.png">
+                    <img id="arrow-right" src="./img/arrow-right.png">
+                </div>
+                <div id="header" class="container mt-4">
+                </div>
+            </div>
+            <div id="big-card-lower" class="container p-4" onclick="event.stopPropagation()">
+                <div id="info-cont" class="container ">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="about-tab" data-bs-toggle="tab" data-bs-target="#about"
+                                type="button" role="tab" aria-controls="about" aria-selected="true">About</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="base-tab" data-bs-toggle="tab" data-bs-target="#base"
+                                type="button" role="tab" aria-controls="base" aria-selected="false">Base Stats</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="evolution-tab" data-bs-toggle="tab" data-bs-target="#evolution"
+                                type="button" role="tab" aria-controls="evolution"
+                                aria-selected="false">Evolution</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="moves-tab" data-bs-toggle="tab" data-bs-target="#moves"
+                                type="button" role="tab" aria-controls="moves" aria-selected="false">Moves</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="about" role="tabpanel" aria-labelledby="about-tab">
+                            About text
+                        </div>
+                        <div class="tab-pane fade" id="base" role="tabpanel" aria-labelledby="base-tab">Base Text</div>
+                        <div class="tab-pane fade" id="evolution" role="tabpanel" aria-labelledby="evolution-tab">
+                            evolution</div>
+                        <div class="tab-pane fade" id="moves" role="tabpanel" aria-labelledby="moves-tab">
+                            moves</div>
+                    </div>
 
-    <div id="big-card" class="container p-4 d-none">
-        <div id="nav" class="container d-flex justify-content-between">
-            <img src="./img/arrow-left.png" alt="">
-            <img src="./img/arrow-right.png" alt="">
-        </div>
-        <div id="header" class="container mt-4">
-        </div>
-        <div id="info-cont" class="container">
+                </div>
+            </div>
         </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>
