@@ -8,7 +8,7 @@
     <title>Pokédex</title>
     <!-- <script src="bootstrap.min.js"></script> -->
     <script src="script.js"> </script>
-    <script src="favorites.js"></script>
+    <script src="favorites-and-search.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -26,7 +26,7 @@
         <div class="container-lg d-flex justify-content-between align-middle">
             <img id="logo" src="./img/pokemon.png">
             <div class="input-group ">
-                <input type="text" class="form-control" placeholder="Nummer oder englischer Name" id="searchField">
+                <input type="text" class="form-control" placeholder="Nummer oder englischer Name" title="suche in alle Pokémon nach einer Nummer oder in den geladenen Pokemon nach einem Namen" id="searchField">
                 <button class="btn btn-outline btn-pokeblue" type="button" onclick="findPokemon()">Button</button>
             </div>
             <img id="heart-blue" src="./img/heart-blue-outline.png" alt="Favoriten anzeigen" title="Favoriten anzeigen" onclick="showFavorites()">

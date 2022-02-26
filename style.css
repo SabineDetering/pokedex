@@ -99,7 +99,7 @@ button {
 
 
 #blur {
-    z-index: 1;
+    z-index: 5;
     background-color: rgba(255, 255, 255, 0.8);
     position: fixed;
     top: 0;
@@ -110,7 +110,7 @@ button {
 
 #big-card {
     position: absolute;
-    z-index: 2;
+    z-index: 10;
     top: 0;
     left: 50%;
     transform: translateX(-50%);
@@ -138,7 +138,7 @@ button {
 .big-pic {
     width: 80%;
     object-fit: contain;
-    z-index: 3;
+    z-index: 15;
 }
 
 #nav img {
@@ -196,8 +196,6 @@ tfoot td {
 
     .big-pic {
         width: 60%;
-        object-fit: contain;
-        z-index: 3;
     }
 
     .nav-link {

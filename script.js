@@ -15,8 +15,8 @@ function capFirstLetter(string) {
 // function loadFirst(num) {
 //     load(1, num);
 // }
- function loadNext(num) {
-     loadAndRender( maxNumber + num);
+async function loadNext(num) {
+    await loadAndRender( maxNumber + num);
  }
 // // sequential loading
 // async function load(start, end) {
@@ -29,10 +29,8 @@ function capFirstLetter(string) {
 
 async function loadAndRender(til) {
     await loadTil(til);
-    console.log('loading done');
     // getId('pikachu').style.display = "none";
     maxNumber = til;
-    console.log('maxnumber=' + maxNumber);
     loadFavorites();
     renderAllCards();
 }
@@ -159,9 +157,15 @@ function colorizeCard(cardid, main, second) {
 function showBigCard(id) {
     getId('blur').classList.remove('d-none');
     document.body.style = 'overflow:hidden;';
+    if (id > maxNumber) {
+        getId('arrow-right').classList.add('invisible');
+        getId('arrow-left').classList.add('invisible');
+    }
     renderBigCard(id);
 }
 function closeBigCard() {
+    getId('arrow-right').classList.remove('invisible');
+    getId('arrow-left').classList.remove('invisible');
     getId('blur').classList.add('d-none');
     document.body.style = 'overflow:auto;';
 }
@@ -183,7 +187,7 @@ function defineOnclickFct(id) {
     if (id < pokeExtract.length - 1) {
         getId('arrow-right').onclick = function () { renderBigCard(id + 1); };
     } else {
-        getId('arrow-right').onclick = async function () { loadNext(1); renderBigCard(id + 1); }
+        getId('arrow-right').onclick = async function () { await loadNext(1); renderBigCard(id + 1); }
     }
     getId('heart').onclick = function () { toggleFavorite(id); }
 }

@@ -4,7 +4,7 @@ function loadFavorites() {
     if (favString) {
         favorites = JSON.parse(favString);
     }
-    for (let i = 1; i < Math.max(maxNumber+1, favorites.length); i++) {
+    for (let i = 1; i < Math.max(maxNumber + 1, pokeExtract.length); i++) {
         if (!favorites[i]) {
             favorites[i] = false;
         }
@@ -47,4 +47,43 @@ function hideFavorites() {
     getId('heart-blue').onclick = function () { showFavorites(); }
     getId('heart-blue').title = "Favoriten anzeigen";
     getId('heart-blue').src = "./img/heart-blue-outline.png";
+}
+
+function findPokemon() {
+    searchValue = getId('searchField').value;
+    if (searchValueIsInteger(searchValue)) {
+        findPokeId(searchValue);
+    } else {
+        findPokeName(searchValue);
+    }
+}
+
+function searchValueIsInteger(searchValue) {
+    if (Number.isInteger(parseInt(searchValue))) {//interpretation as id
+        return true;
+    } else {
+        return false;
+    }
+}
+async function findPokeId(index) {
+    let id = parseInt(index);
+    if (pokeExtract[id]) {
+        showBigCard(id)
+    } else {
+        await loadPokemon(id);
+        loadFavorites();
+        renderAllCards();
+        showBigCard(id);
+    }
+}
+function findPokeName(name) {
+    name = name.toLowerCase();
+    for (let i = 0; i < pokeExtract.length; i++) {
+        if (pokeExtract[i]) {
+            if (pokeExtract[i].name.includes(name)) {
+                showBigCard(i);
+                break;
+            }
+        }
+    }
 }
