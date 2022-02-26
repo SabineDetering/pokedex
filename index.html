@@ -23,11 +23,11 @@
     <!-- overview -->
     <div class=" container-lg text-center ">
         <!-- header -->
-        <div class="container-lg d-flex justify-content-between align-middle">
+        <div class="container-lg d-flex justify-content-between align-items-center">
             <img id="logo" src="./img/pokemon.png">
-            <div class="input-group ">
+            <div class="input-group mx-5 ">
                 <input type="text" class="form-control" placeholder="Nummer oder englischer Name" title="suche in alle Pokémon nach einer Nummer oder in den geladenen Pokemon nach einem Namen" id="searchField">
-                <button class="btn btn-outline btn-pokeblue" type="button" onclick="findPokemon()">Button</button>
+                <button id="search-button" class="btn btn-outline btn-pokeblue" type="button" onclick="findPokemon()">Suchen</button>
             </div>
             <img id="heart-blue" src="./img/heart-blue-outline.png" alt="Favoriten anzeigen" title="Favoriten anzeigen" onclick="showFavorites()">
         </div>
@@ -39,7 +39,7 @@
         <div id="small-cards" class=" container-lg p-0 d-flex flex-wrap justify-content-center">
         </div>
         <!-- footer -->
-        <button type="button" class="btn btn-pokeblue  my-4 py-2 px-4" onclick="loadNext(10)"> Weitere 10 Pokémon laden
+        <button id="footer-button" type="button" class="btn btn-pokeblue  my-4 py-2 px-4 disabled" onclick="loadNext(10)"> Pokémon sind unterwegs
             </button>
     </div>
 
@@ -61,7 +61,7 @@
                 <div id="info-cont" class="container-lg ">
                     <ul class="nav nav-fill nav-pills mb-2" role="tablist">
                         <li class="nav-item " role="presentation">
-                            <button class="nav-link active" id="about-tab" onclick="changeTabColor()"
+                            <button class="nav-link active overflow-hidden" id="about-tab" onclick="changeTabColor()"
                                 data-bs-toggle="tab" data-bs-target="#about" type="button" role="tab"
                                 aria-controls="about" aria-selected="true">About</button>
                         </li>
@@ -100,7 +100,7 @@
                             </table>
                         </div>
 
-                        <div class="tab-pane fade " id="base" role="tabpanel" aria-labelledby="base-tab">
+                        <div class="tab-pane fade overflow-auto" id="base" role="tabpanel" aria-labelledby="base-tab">
                             <table class="table align-middle">
                                 <tr>
                                     <td>HP</td>

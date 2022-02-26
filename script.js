@@ -33,6 +33,8 @@ async function loadAndRender(til) {
     maxNumber = til;
     loadFavorites();
     renderAllCards();
+    getId('footer-button').innerHTML = "Weitere 10 Pokémon laden";
+    getId('footer-button').classList.remove('disabled');
 }
 async function loadTil(end) {
     for (let i = maxNumber + 1; i <= end; i++) {
@@ -250,7 +252,7 @@ function changeTabColor() {
 function calcInfoHeight() {
     let content = getId('tab-content');
     let bigCard = getId('big-card');
-    maxHeight = Math.min(window.innerHeight - content.getBoundingClientRect().top - 16, bigCard.getBoundingClientRect().bottom - content.getBoundingClientRect().top);
+    maxHeight = bigCard.getBoundingClientRect().bottom - content.getBoundingClientRect().top - 24;
     return maxHeight;
 }
 

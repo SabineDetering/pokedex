@@ -48,6 +48,13 @@ function hideFavorites() {
     getId('heart-blue').title = "Favoriten anzeigen";
     getId('heart-blue').src = "./img/heart-blue-outline.png";
 }
+//////////////////////////////////////////////////////////////////////
+getId('searchField').addEventListener("keydown", function () {
+    if (e.key == "Enter") {
+        e.preventDefault();
+        findPokemon();
+    }
+});
 
 function findPokemon() {
     searchValue = getId('searchField').value;
@@ -70,10 +77,12 @@ async function findPokeId(index) {
     if (pokeExtract[id]) {
         showBigCard(id)
     } else {
-        await loadPokemon(id);
-        loadFavorites();
-        renderAllCards();
-        showBigCard(id);
+        if (id>0 && id < 899) {
+            await loadPokemon(id);
+            loadFavorites();
+            renderAllCards();
+            showBigCard(id);
+        } else { alert('Es wurde kein passendes Pokémon gefunden. Bitte geben Sie eine Zahl zwischen 1 und 898 ein.');}
     }
 }
 function findPokeName(name) {
