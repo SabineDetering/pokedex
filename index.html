@@ -8,23 +8,39 @@
     <title>Pokédex</title>
     <!-- <script src="bootstrap.min.js"></script> -->
     <script src="script.js"> </script>
+    <script src="favorites.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
 
 </head>
 
-<body onload="load(28)">
+<body onload="loadAndRender(20)">
     <!-- overview -->
-    <div class=" container-lg">
-
-        <img src="./img/pokemon.png" style="width:200px;max-width:50vw;">
+    <div class=" container-lg text-center ">
+        <!-- header -->
+        <div class="container-lg d-flex justify-content-between align-middle">
+            <img id="logo" src="./img/pokemon.png">
+            <div class="input-group ">
+                <input type="text" class="form-control" placeholder="Nummer oder englischer Name" id="searchField">
+                <button class="btn btn-outline btn-pokeblue" type="button" onclick="findPokemon()">Button</button>
+            </div>
+            <img id="heart-blue" src="./img/heart-blue-outline.png" alt="Favoriten anzeigen" title="Favoriten anzeigen" onclick="showFavorites()">
+        </div>
+        <!-- <div id="pikachu" class="tenor-gif-embed" data-postid="15583157" data-share-method="host" data-aspect-ratio="1.12676"
+            data-width="50%"><a href="https://tenor.com/view/waving-pikachu-gif-cute-hi-gif-15583157">Waving Pikachu
+                Sticker</a>from <a href="https://tenor.com/search/waving-stickers">Waving Stickers</a></div>
+        <script type="text/javascript" async src="https://tenor.com/embed.js"></script> -->
+        <!-- small card area -->
         <div id="small-cards" class=" container-lg p-0 d-flex flex-wrap justify-content-center">
         </div>
+        <!-- footer -->
+        <button type="button" class="btn btn-pokeblue  my-4 py-2 px-4" onclick="loadNext(10)"> Weitere 10 Pokémon laden
+            </button>
     </div>
 
     <!-- setting for single card view -->

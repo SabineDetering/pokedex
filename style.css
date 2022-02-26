@@ -17,6 +17,7 @@
     --bg-rock: #99700D;
     --bg-steel: #B8B8D0;
     --bg-water: #acc9e6;
+    --pokeblue: #3c5aa6;
     --bd-radius: 20px;
 }
 
@@ -42,13 +43,31 @@ button {
 }
 
 /* ************************************************ */
+#logo {
+    width: 250px;
+    max-width: 25vw;
+}
+
+.btn-pokeblue {
+    border: 2px solid var(--pokeblue)!important;
+    font-weight: 700 !important;
+}
+
+.btn-pokeblue:hover {
+    background-color: var(--pokeblue)!important;
+    color: white !important;
+}
+#heart-blue{
+    object-fit: contain;
+}
 
 .small-card {
     border-radius: var(--bd-radius);
     ;
     min-width: 260px;
-    width: 100%;
+    /* width: 100%; */
     max-width: 320px;
+    flex: 1;
     color: white;
     transition: transform box-shadow 225ms ease-in-out;
 }

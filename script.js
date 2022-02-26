@@ -1,47 +1,82 @@
 let pokeInfos = [];
 let pokeExtract = [];
 let currPokemon;
+let maxNumber = 0;
+let favorites = [];
 
+/////////////////////////////////////////////////////////////
 function getId(id) {
     return document.getElementById(id);
 }
 function capFirstLetter(string) {
     return string[0].toUpperCase() + string.slice(1);
 }
+/////////////////////////////////////////////////////////////
+// function loadFirst(num) {
+//     load(1, num);
+// }
+ function loadNext(num) {
+     loadAndRender( maxNumber + num);
+ }
+// // sequential loading
+// async function load(start, end) {
+//     maxNumber = end;
+//     for (let i = start; i <= end; i++) {
+//         await loadPokemon(i);
+//         renderSmallCard(id);
+//     }
+// }
 
-// loading parallel?
-async function load(maxNumber) {
-    for (let i = 1; i <= maxNumber; i++) {
-        await loadPokemon(i);
+async function loadAndRender(til) {
+    await loadTil(til);
+    console.log('loading done');
+    // getId('pikachu').style.display = "none";
+    maxNumber = til;
+    console.log('maxnumber=' + maxNumber);
+    loadFavorites();
+    renderAllCards();
+}
+async function loadTil(end) {
+    for (let i = maxNumber + 1; i <= end; i++) {
+        if (!pokeExtract[i] && i < end) {
+            loadPokemon(i);
+            console.log('loading' + i);
+        } else {
+            await loadPokemon(i);
+            console.log('loading' + i);
+        }
     }
 }
+
+function renderAllCards() {
+    getId('small-cards').innerHTML = '';
+    for (let i = 0; i < pokeExtract.length; i++) {
+        if (pokeExtract[i]) {
+            renderSmallCard(i);
+        };
+    }
+    getId('small-cards').innerHTML += `<div class="small-card" style="visibility:hidden;"></div>`;
+}
+
 async function loadPokemon(id) {
     let url = `https://pokeapi.co/api/v2/pokemon/${id}`;
     let response = await fetch(url);
     pokemon = await response.json();
-    pokeInfos.push(pokemon);// kann später entfallen
+    //pokeInfos.push(pokemon);// kann später entfallen
     extractFeatures(pokemon);
-    renderSmallCard(id);
 }
 
 function extractFeatures(pokemon) {
     let pokeId = pokemon.id;
     let name = pokemon.name;
     let image = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pokeId}.png`;
-
-    let types = pokemon.types;
-    let mainType = types[0].type.name;
-    let secondType = '';
-    if (types.length == 2) {
-        secondType = types[1].type.name;
-    }
+    let types = extractTypes(pokemon);
+    let mainType = types.mainType;
+    let secondType = types.secondType;
     let species = capFirstLetter(pokemon.species.name);
     let height = (pokemon.height * 10).toString() + ' cm';
     let weight = (pokemon.weight / 10).toFixed(1) + ' kg';
-    let abilities = capFirstLetter(pokemon.abilities[0].ability.name);
-    for (let i = 1; i < pokemon.abilities.length; i++) {
-        abilities += ', ' + capFirstLetter(pokemon.abilities[i].ability.name);
-    }
+    let abilities = extractAbilities(pokemon);
     let hp = pokemon.stats[0].base_stat;
     let attack = pokemon.stats[1].base_stat;
     let defense = pokemon.stats[2].base_stat;
@@ -51,19 +86,38 @@ function extractFeatures(pokemon) {
     let baseStatTotal = hp + attack + defense + specialAttack + specialDefense + speed;
     let baseStatAvg = (baseStatTotal / 6).toFixed(1);
     let baseExp = pokemon.base_experience;
+    let moves = extractMoves(pokemon);
+    let items = pokemon.items;
 
+    pokeExtract[pokeId] = { pokeId, name, image, mainType, secondType, species, height, weight, abilities, hp, attack, defense, specialAttack, specialDefense, speed, baseStatTotal, baseStatAvg, baseExp, moves, items };
+}
+
+function extractTypes(pokemon) {
+    let types = pokemon.types;
+    let mainType = types[0].type.name;
+    let secondType = '';
+    if (types.length == 2) {
+        secondType = types[1].type.name;
+    }
+    return { mainType, secondType }
+}
+function extractAbilities(pokemon) {
+    let abilities = capFirstLetter(pokemon.abilities[0].ability.name);
+    for (let i = 1; i < pokemon.abilities.length; i++) {
+        abilities += ', ' + capFirstLetter(pokemon.abilities[i].ability.name);
+    }
+    return abilities;
+}
+function extractMoves(pokemon) {
     let moves = [];
     for (let i = 0; i < pokemon.moves.length; i++) {
         moves.push(capFirstLetter(pokemon.moves[i].move.name));
     }
-    let items = pokemon.items;
-
-    pokeExtract[pokeId] = { pokeId, name, image, mainType, secondType, species, height, weight, abilities, hp, attack, defense, specialAttack, specialDefense, speed, baseStatTotal, baseStatAvg, baseExp, moves,items };
+    return moves;
 }
 
 function renderSmallCard(id) {
     let cards = getId('small-cards');
-    // let pokemon = getPokeInfos(id);
     let pokemon = pokeExtract[id];
 
     cards.innerHTML += ` 
@@ -115,11 +169,11 @@ function closeBigCard() {
 function renderBigCard(id) {
     currPokemon = pokeExtract[id];
     getId('big-card').style.border = `2px solid var(--bg-${currPokemon.mainType})`;
-    renderNav(id);
     renderHeader();
     renderInfos();
+    defineOnclickFct(id);
 }
-function renderNav(id) {
+function defineOnclickFct(id) {
     if (id > 1) {
         getId('arrow-left').onclick = function () { renderBigCard(id - 1); };
     } else {
@@ -129,8 +183,9 @@ function renderNav(id) {
     if (id < pokeExtract.length - 1) {
         getId('arrow-right').onclick = function () { renderBigCard(id + 1); };
     } else {
-        getId('arrow-right').onclick = async function () { await loadPokemon(id + 1); renderBigCard(id + 1); }
+        getId('arrow-right').onclick = async function () { loadNext(1); renderBigCard(id + 1); }
     }
+    getId('heart').onclick = function () { toggleFavorite(id); }
 }
 function renderHeader() {
     let card = getId('header');
@@ -145,14 +200,16 @@ function renderHeader() {
             </div>
             <div class="d-flex flex-column align-items-end mt-1"> 
                 <h4 class="">#${currPokemon.pokeId}</h4>    
-                <img id="heart" src="./img/heart-outline.png">    
+                <img id="heart" src="${getHeartSrc(currPokemon.pokeId)}">    
             </div>
         </div>
         <div class="d-flex justify-content-center"><img class="big-pic" src="${currPokemon.image}"></div>
      
     `;
     colorizeCard('big-card-upper', currPokemon.mainType, currPokemon.secondType);
+
 }
+
 
 function renderInfos() {
     changeTabColor();
@@ -214,7 +271,7 @@ function renderBaseStats() {
     getId('sp-defense').innerHTML = currPokemon.specialDefense;
     getId('speed').innerHTML = currPokemon.speed;
     getId('total').innerHTML = currPokemon.baseStatTotal;
-    getId('avg').innerHTML = currPokemon.baseStatAvg;    
+    getId('avg').innerHTML = currPokemon.baseStatAvg;
 }
 
 function renderMoves() {
