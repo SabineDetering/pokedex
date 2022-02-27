@@ -1,7 +1,10 @@
-let pokeInfos = [];
+//relevant data of loaded pokemon
 let pokeExtract = [];
+//current pokemon
 let currPokemon;
+//number of loaded pokemon without gaps (there might single pokemon with higher ids that were loaded via search)
 let maxNumber = 0;
+//array of booleans to mark favorite pokemon
 let favorites = [];
 
 /////////////////////////////////////////////////////////////
@@ -11,13 +14,45 @@ function getId(id) {
 function capFirstLetter(string) {
     return string[0].toUpperCase() + string.slice(1);
 }
+/*not working*/
+let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl)
+})
 /////////////////////////////////////////////////////////////
-// function loadFirst(num) {
-//     load(1, num);
-// }
+/**
+ * intiates loading and rendering additional pokemon (parallel load)
+ * @param {integer} num: number of pokemon to load starting from maxNumber
+ */
 async function loadNext(num) {
-    await loadAndRender( maxNumber + num);
- }
+    await loadAndRender(maxNumber + num);
+}
+/**
+ * loads and renders pokemon starting from maxNumber
+ * @param {integer} til: highest id of pokemon to load 
+ */
+async function loadAndRender(til) {
+    await loadTil(til);
+    maxNumber = til;
+    loadFavorites();
+    renderAllCards();
+    getId('footer-button').innerHTML = "Weitere 10 Pokémon laden";
+    getId('footer-button').classList.remove('disabled');
+}
+/**
+ * parallel loading of pokemon starting at maxNumber
+ * function is done when all pokemon wanted are loaded
+ * @param {integer} end: highest id of pokemon to load
+ */
+async function loadTil(end) {
+    let id_array = [];
+    for (let i = maxNumber + 1; i <= end; i++) {
+        id_array.push(i);
+    }
+    const promises = id_array.map(id => loadPokemon(id));
+    await Promise.all(promises);
+}
+
 // // sequential loading
 // async function load(start, end) {
 //     maxNumber = end;
@@ -27,27 +62,46 @@ async function loadNext(num) {
 //     }
 // }
 
-async function loadAndRender(til) {
-    await loadTil(til);
-    // getId('pikachu').style.display = "none";
-    maxNumber = til;
-    loadFavorites();
-    renderAllCards();
-    getId('footer-button').innerHTML = "Weitere 10 Pokémon laden";
-    getId('footer-button').classList.remove('disabled');
+// async function loadTil(end) {
+//     for (let i = maxNumber + 1; i <= end; i++) {
+//         if (!pokeExtract[i] && i < end) {
+//             loadPokemon(i);
+//             console.log('loading' + i);
+//         } else {
+//             await loadPokemon(i);
+//             console.log('loading' + i);
+//         }
+//     }
+// }
+/**
+ * load single pokemon from API, reference by name
+ * extract relevant data from response
+ * @param {string} name 
+ * @returns id
+ */
+async function loadPokemonName(name) {
+    let url = `https://pokeapi.co/api/v2/pokemon/${name}`;
+    let response = await fetch(url);
+    pokemon = await response.json();
+    extractFeatures(pokemon);
+    return pokemon.id;
 }
-async function loadTil(end) {
-    for (let i = maxNumber + 1; i <= end; i++) {
-        if (!pokeExtract[i] && i < end) {
-            loadPokemon(i);
-            console.log('loading' + i);
-        } else {
-            await loadPokemon(i);
-            console.log('loading' + i);
-        }
-    }
+/**
+ * load single pokemon from API, reference by id
+ * extract relevant data from response
+ * @param {integer} id 
+ */
+async function loadPokemon(id) {
+    let url = `https://pokeapi.co/api/v2/pokemon/${id}`;
+    let response = await fetch(url);
+    pokemon = await response.json();
+    extractFeatures(pokemon);
 }
-
+//////////////////////////////////////////////////////////////////
+/**
+ * show all loaded pokemon as small cards
+ * missing pokemon are omitted
+ */
 function renderAllCards() {
     getId('small-cards').innerHTML = '';
     for (let i = 0; i < pokeExtract.length; i++) {
@@ -55,17 +109,14 @@ function renderAllCards() {
             renderSmallCard(i);
         };
     }
+    // invisible card for layout purposes
     getId('small-cards').innerHTML += `<div class="small-card" style="visibility:hidden;"></div>`;
 }
 
-async function loadPokemon(id) {
-    let url = `https://pokeapi.co/api/v2/pokemon/${id}`;
-    let response = await fetch(url);
-    pokemon = await response.json();
-    //pokeInfos.push(pokemon);// kann später entfallen
-    extractFeatures(pokemon);
-}
-
+/**
+ * extract relevant data from API-response
+ * @param {*} pokemon 
+ */
 function extractFeatures(pokemon) {
     let pokeId = pokemon.id;
     let name = pokemon.name;
@@ -92,6 +143,11 @@ function extractFeatures(pokemon) {
     pokeExtract[pokeId] = { pokeId, name, image, mainType, secondType, species, height, weight, abilities, hp, attack, defense, specialAttack, specialDefense, speed, baseStatTotal, baseStatAvg, baseExp, moves, items };
 }
 
+/**
+ * extract types from API-data
+ * @param {json} pokemon 
+ * @returns {mainType, secondType}
+ */
 function extractTypes(pokemon) {
     let types = pokemon.types;
     let mainType = types[0].type.name;
@@ -101,6 +157,11 @@ function extractTypes(pokemon) {
     }
     return { mainType, secondType }
 }
+/**
+ * extract abilities from API-data
+ * @param {json} pokemon 
+ * @returns string, comma separated list of abilities 
+ */
 function extractAbilities(pokemon) {
     let abilities = capFirstLetter(pokemon.abilities[0].ability.name);
     for (let i = 1; i < pokemon.abilities.length; i++) {
@@ -108,6 +169,11 @@ function extractAbilities(pokemon) {
     }
     return abilities;
 }
+/**
+ * extract moves from API-data
+ * @param {json} pokemon 
+ * @returns array of moves
+ */
 function extractMoves(pokemon) {
     let moves = [];
     for (let i = 0; i < pokemon.moves.length; i++) {
@@ -115,17 +181,22 @@ function extractMoves(pokemon) {
     }
     return moves;
 }
-
+/**
+ * render small card for single pokemon
+ * @param {integer} id 
+ */
 function renderSmallCard(id) {
     let cards = getId('small-cards');
     let pokemon = pokeExtract[id];
 
     cards.innerHTML += ` 
     <div id='card-${pokemon.pokeId}' class="small-card container-lg m-2 p-4" onclick="showBigCard(${pokemon.pokeId})">
+
         <div  class="d-flex justify-content-between"> 
             <h2>${capFirstLetter(pokemon.name)}</h2>
             <h4 >#${pokemon.pokeId}</h4>
         </div>
+
         <div class="d-flex justify-content-between"> 
             <div>                       
                  ${renderTypeDivs(pokemon.mainType, pokemon.secondType)}       
@@ -134,9 +205,16 @@ function renderSmallCard(id) {
         </div>
      </div>
         `;
+    // use colors of types
     colorizeCard(`card-${pokemon.pokeId}`, pokemon.mainType, pokemon.secondType);
 }
 
+/**
+ * render types
+ * @param {string} main :mainType
+ * @param {string} second :secondType
+ * @returns html code
+ */
 function renderTypeDivs(main, second) {
     let htmlcode =
         `<div class="type mt-1 me-1 px-2 py-1">${capFirstLetter(main)}</div>`;
@@ -146,7 +224,13 @@ function renderTypeDivs(main, second) {
     }
     return htmlcode;
 }
-
+/**
+ * sets background color of card according to mainType
+ * background of secondType according to secondType
+ * @param {integer} cardid :id of pokemon
+ * @param {string} main :mainType
+ * @param {string} second :secondType
+ */
 function colorizeCard(cardid, main, second) {
     getId(cardid).style.backgroundColor = `var(--bg-${main})`;
     if (second) {
@@ -155,7 +239,10 @@ function colorizeCard(cardid, main, second) {
     }
 }
 
-
+/**
+ * show single pokemon on big card
+ * @param {integer} id of pokemon
+ */
 function showBigCard(id) {
     getId('blur').classList.remove('d-none');
     document.body.style = 'overflow:hidden;';
@@ -165,13 +252,19 @@ function showBigCard(id) {
     }
     renderBigCard(id);
 }
+/**
+ * close single pokemon view
+ */
 function closeBigCard() {
     getId('arrow-right').classList.remove('invisible');
     getId('arrow-left').classList.remove('invisible');
     getId('blur').classList.add('d-none');
     document.body.style = 'overflow:auto;';
 }
-
+/**
+ * render view of single pokemon
+ * @param {integer} id of pokemon
+ */
 function renderBigCard(id) {
     currPokemon = pokeExtract[id];
     getId('big-card').style.border = `2px solid var(--bg-${currPokemon.mainType})`;
@@ -179,6 +272,10 @@ function renderBigCard(id) {
     renderInfos();
     defineOnclickFct(id);
 }
+/**
+ * define onclick functions for arrows and heart
+ * @param {integer} id of pokemon
+ */
 function defineOnclickFct(id) {
     if (id > 1) {
         getId('arrow-left').onclick = function () { renderBigCard(id - 1); };
@@ -193,6 +290,11 @@ function defineOnclickFct(id) {
     }
     getId('heart').onclick = function () { toggleFavorite(id); }
 }
+/**
+ * render colored part of infos
+ * color according to main type
+ * heart shows if pokemon is favorite
+ */
 function renderHeader() {
     let card = getId('header');
 
@@ -213,10 +315,11 @@ function renderHeader() {
      
     `;
     colorizeCard('big-card-upper', currPokemon.mainType, currPokemon.secondType);
-
 }
 
-
+/**
+ * render white part of infos
+ */
 function renderInfos() {
     changeTabColor();
     renderAbout();
@@ -224,21 +327,29 @@ function renderInfos() {
     renderMoves();
     colorizeInnerBorders();
 }
+/**
+ * use main type color for all borders in the card
+ */
 function colorizeInnerBorders() {
-
     colorizeBorder("td");
     colorizeBorder("tfoot");
     colorizeBorder(".move");
     colorizeBorder("td");
     colorizeBorder("td");
 }
-
+/**
+ * apply main type color to borders of element
+ * @param {id} of element 
+ */
 function colorizeBorder(element) {
     let elements = document.querySelectorAll(`${element}`);
     for (let i = 0; i < elements.length; i++) {
         elements[i].style.borderColor = `var(--bg-${currPokemon.mainType}`;
     }
 }
+/**
+ * apply main type color to mark active tab
+ */
 function changeTabColor() {
     let links = document.querySelectorAll(".nav-link");
     for (let i = 0; i < links.length; i++) {
@@ -249,13 +360,19 @@ function changeTabColor() {
     active.style.backgroundColor = `var(--bg-${currPokemon.mainType}`;
     active.style.color = "#f9f9de";
 }
+/**
+ * calculates the max available height for infos in the white part
+ * @returns maxheight
+ */
 function calcInfoHeight() {
     let content = getId('tab-content');
     let bigCard = getId('big-card');
     maxHeight = bigCard.getBoundingClientRect().bottom - content.getBoundingClientRect().top - 24;
     return maxHeight;
 }
-
+/**
+ * render about tab infos
+ */
 function renderAbout() {
     let about = getId('about');
     about.style.maxHeight = `${calcInfoHeight()}px`;
@@ -266,6 +383,9 @@ function renderAbout() {
     getId('abilities').innerHTML = currPokemon.abilities;
 }
 
+/**
+ * render base stat infos
+ */
 function renderBaseStats() {
     let base = getId('base');
     base.style.maxHeight = `${calcInfoHeight()}px`;
@@ -280,6 +400,9 @@ function renderBaseStats() {
     getId('avg').innerHTML = currPokemon.baseStatAvg;
 }
 
+/**
+ * render moves tab infos
+ */
 function renderMoves() {
     let moves = getId('moves');
 
