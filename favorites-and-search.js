@@ -54,10 +54,13 @@ function showFavorites() {
         };
     }
     getId('small-cards').innerHTML += `<div class="small-card" style="visibility:hidden;"></div>`;
+    getId('small-cards').innerHTML += `<div class="small-card" style="visibility:hidden;"></div>`;
+    getId('small-cards').innerHTML += `<div class="small-card" style="visibility:hidden;"></div>`;
 
     getId('heart-blue').onclick = function () { hideFavorites(); }
     getId('heart-blue').title = "alle anzeigen";
     getId('heart-blue').src = "./img/heart-blue-filled.png";
+    getId('footer-button').classList.add('d-none');
 }
 /**
  * return to all cards
@@ -68,6 +71,7 @@ function hideFavorites() {
     getId('heart-blue').onclick = function () { showFavorites(); }
     getId('heart-blue').title = "Favoriten anzeigen";
     getId('heart-blue').src = "./img/heart-blue-outline.png";
+    getId('footer-button').classList.remove('d-none');
 }
 //////////////////////////////////////////////////////////////////////
 // getId("searchField").addEventListener("keydown", function () {
