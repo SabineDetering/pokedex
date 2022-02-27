@@ -91,6 +91,7 @@ function keydown(e) {
  */
 function findPokemon() {
     searchValue = getId('searchField').value;
+    getId('searchField').value='';
     if (searchValueIsInteger(searchValue)) {
         findPokeId(searchValue);
     } else {
