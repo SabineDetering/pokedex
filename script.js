@@ -188,6 +188,7 @@ function renderBigCard(id) {
 }
 /**
  * define onclick functions for arrows and heart
+ * moving to neighboring pokemon is only allowed for ids upto maxNumber
  * @param {integer} id of pokemon
  */
 function defineOnclickFct(id) {
@@ -274,23 +275,11 @@ function changeTabColor() {
     active.style.backgroundColor = `var(--bg-${currPokemon.mainType}`;
     active.style.color = "#f9f9de";
 }
-/**
- * calculates the max available height for infos in the white part
- * @returns maxheight
- */
-function calcInfoHeight() {
-    let content = getId('tab-content');
-    let bigCard = getId('big-card');
-    maxHeight = bigCard.getBoundingClientRect().bottom - content.getBoundingClientRect().top - 24;
-    return maxHeight;
-}
+
 /**
  * render about tab infos
  */
 function renderAbout() {
-    let about = getId('about');
-    // about.style.maxHeight = `${calcInfoHeight()}px`;
-
     getId('species').innerHTML = currPokemon.species;
     getId('height').innerHTML = currPokemon.height;
     getId('weight').innerHTML = currPokemon.weight;
@@ -301,9 +290,6 @@ function renderAbout() {
  * render base stat infos
  */
 function renderBaseStats() {
-    let base = getId('base');
-    // base.style.maxHeight = `${calcInfoHeight()}px`;
-
     getId('hp').innerHTML = currPokemon.hp;
     getId('attack').innerHTML = currPokemon.attack;
     getId('defense').innerHTML = currPokemon.defense;
@@ -319,7 +305,6 @@ function renderBaseStats() {
  */
 function renderMoves() {
     let moves = getId('moves');
-    // moves.style.maxHeight = `${calcInfoHeight()}px`;
     moves.innerHTML = '';
 
     for (let i = 0; i < currPokemon.moves.length; i++) {
@@ -329,3 +314,4 @@ function renderMoves() {
         `;
     }
 }
+
