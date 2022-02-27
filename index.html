@@ -8,14 +8,26 @@
     <title>Pokédex</title>
     <!-- <script src="bootstrap.min.js"></script> -->
     <script src="script.js"> </script>
+    <script src="data.js"> </script>
     <script src="favorites-and-search.js"></script>
+    <script>
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    </script>
+
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
 
 </head>
 
@@ -31,7 +43,7 @@
                 <input type="text" class="form-control" placeholder="Nummer oder englischer Name"
                     data-bs-toggle="tooltip" data-bs-placement="bottom"
                     title="Suche dein Lieblings-Pokémon über seine Nummer oder seinen englischen Namen. Bei schon geladenen Pokemon reicht auch ein Teil des Namens."
-                    id="searchField" onkeydown="keydown">
+                    id="searchField" onkeydown="keydown(event)">
                 <button id="search-button" class="btn btn-outline btn-pokeblue" type="button"
                     onclick="findPokemon()">Suchen</button>
             </div>
@@ -170,7 +182,7 @@
                             </table>
                         </div>
                         <!-- tab: moves -->
-                        <div class="tab-pane fade  d-flex flex-wrap" id="moves" role="tabpanel"
+                        <div class="tab-pane fade  d-flex flex-wrap overflow-auto" id="moves" role="tabpanel"
                             aria-labelledby="moves-tab">
                             moves</div>
                     </div>
@@ -179,8 +191,8 @@
             </div>
         </div>
     </div>
-    
-    <!-- include bootstrap.bundle.min.js -->
+
+    <!-- include bootstrap.bundle.min.js for tooltips-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
