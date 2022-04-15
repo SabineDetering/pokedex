@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: favorites-and-search.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: favorites-and-search.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * load favorites from storage if available
+ * if no info available set favorite to false
+ * initiate saving favorites
+ */
+function loadFavorites() {
+    let favString = localStorage.getItem('favorites');
+    if (favString) {
+        favorites = JSON.parse(favString);
+    }
+    for (let i = 1; i &lt; Math.max(maxNumber + 1, pokeExtract.length); i++) {
+        if (!favorites[i]) {
+            favorites[i] = false;
+        }
+    }
+    saveFavorites();
+}
+/**
+ * save favorites
+ */
+function saveFavorites() {
+    let favString = JSON.stringify(favorites);
+    localStorage.setItem('favorites', favString);
+}
+/**
+ * selects heart image according to favorite status
+ * @param {integer} id of pokemon
+ * @returns source for image
+ */
+function getHeartSrc(id) {
+    if (favorites[id]) {
+        return './img/heart-filled.png';
+    } else { return './img/heart-outline.png'; }
+}
+
+/**
+ * switch favorite status
+ * @param {integer} id of pokemon
+ */
+function toggleFavorite(id) {
+    favorites[id] = !favorites[id];
+    getId('heart').src = getHeartSrc(id);
+    saveFavorites();
+}
+/**
+ * show favorites only (small cards)
+ * toggle heart
+ */
+function showFavorites() {
+    getId('small-cards').innerHTML = '';
+    for (let i = 0; i &lt; pokeExtract.length; i++) {
+        if (pokeExtract[i] &amp;&amp; favorites[i]) {
+            renderSmallCard(i);
+        };
+    }
+    getId('small-cards').innerHTML += `&lt;div class="small-card" style="visibility:hidden;">&lt;/div>`;
+    getId('small-cards').innerHTML += `&lt;div class="small-card" style="visibility:hidden;">&lt;/div>`;
+    getId('small-cards').innerHTML += `&lt;div class="small-card" style="visibility:hidden;">&lt;/div>`;
+
+    getId('heart-blue').onclick = function () { hideFavorites(); }
+    getId('heart-blue').title = "alle anzeigen";
+    getId('heart-blue').src = "./img/heart-blue-filled.png";
+    getId('footer-button').classList.add('d-none');
+}
+/**
+ * return to all cards
+ * toggle heart
+ */
+function hideFavorites() {
+    renderAllCards();
+    getId('heart-blue').onclick = function () { showFavorites(); }
+    getId('heart-blue').title = "Favoriten anzeigen";
+    getId('heart-blue').src = "./img/heart-blue-outline.png";
+    getId('footer-button').classList.remove('d-none');
+}
+//////////////////////////////////////////////////////////////////////
+// getId("searchField").addEventListener("keydown", function () {
+//     if (e.key == "Enter") {
+//         e.preventDefault();
+//         findPokemon();
+//     }
+// });
+/**
+ * allow return key as affirmation of input field
+ * not working!
+ * @param {*} e 
+ */
+function keydown(e) {
+    if (e.keyCode == 13) {
+        findPokemon();
+    }
+}
+/**
+ * find searched pokemon
+ */
+function findPokemon() {
+    searchValue = getId('searchField').value;
+    getId('searchField').value='';
+    if (searchValueIsInteger(searchValue)) {
+        findPokeId(searchValue);
+    } else {
+        findPokeName(searchValue);
+    }
+}
+
+/**
+ * returns true if search value is an integer
+ * false otherwise
+ * @param {string} searchValue 
+ * @returns boolean
+ */
+function searchValueIsInteger(searchValue) {
+    if (Number.isInteger(parseInt(searchValue))) {//interpretation as id
+        return true;
+    } else {
+        return false;
+    }
+}
+/**
+ * show searched pokemon
+ * if necessary load it before
+ * @param {integer} index id of searched pokemon
+ */
+async function findPokeId(index) {
+    let id = parseInt(index);
+    if (pokeExtract[id]) {
+        showBigCard(id)
+    } else {
+        if (id > 0 &amp;&amp; id &lt; 899) {
+            await loadPokemon(id);
+            loadFavorites();
+            renderAllCards();
+            showBigCard(id);
+        } else { alert('Es wurde kein passendes Pokémon gefunden. Bitte geben Sie eine Zahl zwischen 1 und 898 ein.'); }
+    }
+}
+/**
+ * show searched pokemon
+ * if necessary load it before
+ * @param {string} name 
+ */
+async function findPokeName(name) {
+    name = name.toLowerCase();
+    let found = false;
+    for (let i = 0; i &lt; pokeExtract.length; i++) {
+        if (pokeExtract[i]) {
+            if (pokeExtract[i].name.includes(name)) {
+                showBigCard(i);
+                found = true;
+                break;
+            }
+        }
+    }
+    if (!found) {//not yet loaded
+        id = await loadPokemonName(name);
+        if (id) {
+            loadFavorites();
+            renderAllCards();
+            showBigCard(id);
+        } else {
+            alert('Es wurde kein passendes Pokémon gefunden.');
+        }
+    }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#changeTabColor">changeTabColor</a></li><li><a href="global.html#closeBigCard">closeBigCard</a></li><li><a href="global.html#colorizeBorder">colorizeBorder</a></li><li><a href="global.html#colorizeCard">colorizeCard</a></li><li><a href="global.html#colorizeInnerBorders">colorizeInnerBorders</a></li><li><a href="global.html#defineOnclickFct">defineOnclickFct</a></li><li><a href="global.html#extractAbilities">extractAbilities</a></li><li><a href="global.html#extractFeatures">extractFeatures</a></li><li><a href="global.html#extractMoves">extractMoves</a></li><li><a href="global.html#extractTypes">extractTypes</a></li><li><a href="global.html#findPokeId">findPokeId</a></li><li><a href="global.html#findPokemon">findPokemon</a></li><li><a href="global.html#findPokeName">findPokeName</a></li><li><a href="global.html#getHeartSrc">getHeartSrc</a></li><li><a href="global.html#hideFavorites">hideFavorites</a></li><li><a href="global.html#keydown">keydown</a></li><li><a href="global.html#loadAndRender">loadAndRender</a></li><li><a href="global.html#loadFavorites">loadFavorites</a></li><li><a href="global.html#loadNext">loadNext</a></li><li><a href="global.html#loadPokemon">loadPokemon</a></li><li><a href="global.html#loadPokemonName">loadPokemonName</a></li><li><a href="global.html#loadTil">loadTil</a></li><li><a href="global.html#renderAbout">renderAbout</a></li><li><a href="global.html#renderAllCards">renderAllCards</a></li><li><a href="global.html#renderBaseStats">renderBaseStats</a></li><li><a href="global.html#renderBigCard">renderBigCard</a></li><li><a href="global.html#renderHeader">renderHeader</a></li><li><a href="global.html#renderInfos">renderInfos</a></li><li><a href="global.html#renderMoves">renderMoves</a></li><li><a href="global.html#renderSmallCard">renderSmallCard</a></li><li><a href="global.html#renderTypeDivs">renderTypeDivs</a></li><li><a href="global.html#saveFavorites">saveFavorites</a></li><li><a href="global.html#searchValueIsInteger">searchValueIsInteger</a></li><li><a href="global.html#showBigCard">showBigCard</a></li><li><a href="global.html#showFavorites">showFavorites</a></li><li><a href="global.html#toggleFavorite">toggleFavorite</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Fri Apr 15 2022 18:30:09 GMT+0200 (Mitteleuropäische Sommerzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

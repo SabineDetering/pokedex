@@ -1,4 +1,32 @@
-//relevant data of loaded pokemon
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: script.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: script.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>//relevant data of loaded pokemon
 let pokeExtract = [];
 //current pokemon
 let currPokemon;
@@ -27,8 +55,6 @@ function capFirstLetter(string) {
 async function loadNext(num) {
     await loadAndRender(maxNumber + num);
 }
-
-
 /**
  * loads and renders pokemon starting from maxNumber
  * @param {integer} til: highest id of pokemon to load 
@@ -41,8 +67,6 @@ async function loadAndRender(til) {
     getId('footer-button').innerHTML = "Weitere 10 Pokémon laden";
     getId('footer-button').classList.remove('disabled');
 }
-
-
 /**
  * parallel loading of pokemon starting at maxNumber
  * function is done when all pokemon wanted are loaded
@@ -50,13 +74,12 @@ async function loadAndRender(til) {
  */
 async function loadTil(end) {
     let id_array = [];
-    for (let i = maxNumber + 1; i <= end; i++) {
+    for (let i = maxNumber + 1; i &lt;= end; i++) {
         id_array.push(i);
     }
     const promises = id_array.map(id => loadPokemon(id));
     await Promise.all(promises);
 }
-
 
 /**
  * load single pokemon from API, reference by name
@@ -71,8 +94,6 @@ async function loadPokemonName(name) {
     extractFeatures(pokemon);
     return pokemon.id;
 }
-
-
 /**
  * load single pokemon from API, reference by id
  * extract relevant data from response
@@ -84,8 +105,6 @@ async function loadPokemon(id) {
     pokemon = await response.json();
     extractFeatures(pokemon);
 }
-
-
 //////////////////////////////////////////////////////////////////
 /**
  * show all loaded pokemon as small cards
@@ -93,17 +112,16 @@ async function loadPokemon(id) {
  */
 function renderAllCards() {
     getId('small-cards').innerHTML = '';
-    for (let i = 0; i < pokeExtract.length; i++) {
+    for (let i = 0; i &lt; pokeExtract.length; i++) {
         if (pokeExtract[i]) {
             renderSmallCard(i);
         };
     }
     // invisible card for layout purposes
-    getId('small-cards').innerHTML += `<div class="small-card" style="visibility:hidden;"></div>`;
-    getId('small-cards').innerHTML += `<div class="small-card" style="visibility:hidden;"></div>`;
-    getId('small-cards').innerHTML += `<div class="small-card" style="visibility:hidden;"></div>`;
+    getId('small-cards').innerHTML += `&lt;div class="small-card" style="visibility:hidden;">&lt;/div>`;
+    getId('small-cards').innerHTML += `&lt;div class="small-card" style="visibility:hidden;">&lt;/div>`;
+    getId('small-cards').innerHTML += `&lt;div class="small-card" style="visibility:hidden;">&lt;/div>`;
 }
-
 
 /**
  * render small card for single pokemon
@@ -114,25 +132,24 @@ function renderSmallCard(id) {
     let pokemon = pokeExtract[id];
 
     cards.innerHTML += ` 
-    <div id='card-${pokemon.pokeId}' class="small-card container-lg m-2 p-4" onclick="showBigCard(${pokemon.pokeId})">
+    &lt;div id='card-${pokemon.pokeId}' class="small-card container-lg m-2 p-4" onclick="showBigCard(${pokemon.pokeId})">
 
-        <div  class="d-flex justify-content-between"> 
-            <h2>${capFirstLetter(pokemon.name)}</h2>
-            <h4 >#${pokemon.pokeId}</h4>
-        </div>
+        &lt;div  class="d-flex justify-content-between"> 
+            &lt;h2>${capFirstLetter(pokemon.name)}&lt;/h2>
+            &lt;h4 >#${pokemon.pokeId}&lt;/h4>
+        &lt;/div>
 
-        <div class="d-flex justify-content-between"> 
-            <div>                       
+        &lt;div class="d-flex justify-content-between"> 
+            &lt;div>                       
                  ${renderTypeDivs(pokemon.mainType, pokemon.secondType)}       
-            </div>
-            <img src="${pokemon.image}" >
-        </div>
-     </div>
+            &lt;/div>
+            &lt;img src="${pokemon.image}" >
+        &lt;/div>
+     &lt;/div>
         `;
     // use colors of types
     colorizeCard(`card-${pokemon.pokeId}`, pokemon.mainType, pokemon.secondType);
 }
-
 
 /**
  * render types
@@ -142,15 +159,13 @@ function renderSmallCard(id) {
  */
 function renderTypeDivs(main, second) {
     let htmlcode =
-        `<div class="type mt-1 me-1 px-2 py-1">${capFirstLetter(main)}</div>`;
+        `&lt;div class="type mt-1 me-1 px-2 py-1">${capFirstLetter(main)}&lt;/div>`;
     if (second) {
         htmlcode += `
-        <div class="type mt-1 px-2 py-1">${capFirstLetter(second)}</div>`;
+        &lt;div class="type mt-1 px-2 py-1">${capFirstLetter(second)}&lt;/div>`;
     }
     return htmlcode;
 }
-
-
 /**
  * sets background color of card according to mainType
  * background of secondType according to secondType
@@ -166,7 +181,6 @@ function colorizeCard(cardid, main, second) {
     }
 }
 
-
 /**
  * show single pokemon on big card
  * @param {integer} id of pokemon
@@ -180,8 +194,6 @@ function showBigCard(id) {
     }
     renderBigCard(id);
 }
-
-
 /**
  * close single pokemon view
  */
@@ -191,8 +203,6 @@ function closeBigCard() {
     getId('blur').classList.add('d-none');
     document.body.style = 'overflow:auto;';
 }
-
-
 /**
  * render view of single pokemon
  * @param {integer} id of pokemon
@@ -204,8 +214,6 @@ function renderBigCard(id) {
     renderInfos();
     defineOnclickFct(id);
 }
-
-
 /**
  * define onclick functions for arrows and heart
  * moving to neighboring pokemon is only allowed for ids upto maxNumber
@@ -218,15 +226,13 @@ function defineOnclickFct(id) {
         getId('arrow-left').onclick = function () { closeBigCard(); }
     }
 
-    if (id < pokeExtract.length - 1) {
+    if (id &lt; pokeExtract.length - 1) {
         getId('arrow-right').onclick = function () { renderBigCard(id + 1); };
     } else {
         getId('arrow-right').onclick = async function () { await loadNext(1); renderBigCard(id + 1); }
     }
     getId('heart').onclick = function () { toggleFavorite(id); }
 }
-
-
 /**
  * render colored part of infos
  * color according to main type
@@ -236,24 +242,23 @@ function renderHeader() {
     let card = getId('header');
 
     card.innerHTML = `     
-        <div  class="d-flex justify-content-between"> 
-            <div>
-                <h2>${capFirstLetter(currPokemon.name)}</h2>
-                <div class="type-wrapper">
+        &lt;div  class="d-flex justify-content-between"> 
+            &lt;div>
+                &lt;h2>${capFirstLetter(currPokemon.name)}&lt;/h2>
+                &lt;div class="type-wrapper">
                      ${renderTypeDivs(currPokemon.mainType, currPokemon.secondType)}
-                </div>
-            </div>
-            <div class="d-flex flex-column align-items-end mt-1"> 
-                <h4 class="">#${currPokemon.pokeId}</h4>    
-                <img id="heart" src="${getHeartSrc(currPokemon.pokeId)}">    
-            </div>
-        </div>
-        <div class="d-flex justify-content-center"><img class="big-pic" src="${currPokemon.image}"></div>
+                &lt;/div>
+            &lt;/div>
+            &lt;div class="d-flex flex-column align-items-end mt-1"> 
+                &lt;h4 class="">#${currPokemon.pokeId}&lt;/h4>    
+                &lt;img id="heart" src="${getHeartSrc(currPokemon.pokeId)}">    
+            &lt;/div>
+        &lt;/div>
+        &lt;div class="d-flex justify-content-center">&lt;img class="big-pic" src="${currPokemon.image}">&lt;/div>
      
     `;
     colorizeCard('big-card-upper', currPokemon.mainType, currPokemon.secondType);
 }
-
 
 /**
  * render white part of infos
@@ -265,8 +270,6 @@ function renderInfos() {
     renderMoves();
     colorizeInnerBorders();
 }
-
-
 /**
  * use main type color for all borders in the card
  */
@@ -277,26 +280,22 @@ function colorizeInnerBorders() {
     colorizeBorder("td");
     colorizeBorder("td");
 }
-
-
 /**
  * apply main type color to borders of element
  * @param {id} of element 
  */
 function colorizeBorder(element) {
     let elements = document.querySelectorAll(`${element}`);
-    for (let i = 0; i < elements.length; i++) {
+    for (let i = 0; i &lt; elements.length; i++) {
         elements[i].style.borderColor = `var(--bg-${currPokemon.mainType}`;
     }
 }
-
-
 /**
  * apply main type color to mark active tab
  */
 function changeTabColor() {
     let links = document.querySelectorAll(".nav-link");
-    for (let i = 0; i < links.length; i++) {
+    for (let i = 0; i &lt; links.length; i++) {
         links[i].style.color = "black";
         links[i].style.backgroundColor = "#f9f9de";
     }
@@ -304,7 +303,6 @@ function changeTabColor() {
     active.style.backgroundColor = `var(--bg-${currPokemon.mainType}`;
     active.style.color = "#f9f9de";
 }
-
 
 /**
  * render about tab infos
@@ -315,7 +313,6 @@ function renderAbout() {
     getId('weight').innerHTML = currPokemon.weight;
     getId('abilities').innerHTML = currPokemon.abilities;
 }
-
 
 /**
  * render base stat infos
@@ -331,7 +328,6 @@ function renderBaseStats() {
     getId('avg').innerHTML = currPokemon.baseStatAvg;
 }
 
-
 /**
  * render moves tab infos
  */
@@ -339,10 +335,34 @@ function renderMoves() {
     let moves = getId('moves');
     moves.innerHTML = '';
 
-    for (let i = 0; i < currPokemon.moves.length; i++) {
+    for (let i = 0; i &lt; currPokemon.moves.length; i++) {
         const move = currPokemon.moves[i];
         moves.innerHTML += `
-        <div class="move text-nowrap p-1 text-center m-1">${move}</div>
+        &lt;div class="move text-nowrap p-1 text-center m-1">${move}&lt;/div>
         `;
     }
 }
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#changeTabColor">changeTabColor</a></li><li><a href="global.html#closeBigCard">closeBigCard</a></li><li><a href="global.html#colorizeBorder">colorizeBorder</a></li><li><a href="global.html#colorizeCard">colorizeCard</a></li><li><a href="global.html#colorizeInnerBorders">colorizeInnerBorders</a></li><li><a href="global.html#defineOnclickFct">defineOnclickFct</a></li><li><a href="global.html#loadAndRender">loadAndRender</a></li><li><a href="global.html#loadNext">loadNext</a></li><li><a href="global.html#loadPokemon">loadPokemon</a></li><li><a href="global.html#loadPokemonName">loadPokemonName</a></li><li><a href="global.html#loadTil">loadTil</a></li><li><a href="global.html#renderAbout">renderAbout</a></li><li><a href="global.html#renderAllCards">renderAllCards</a></li><li><a href="global.html#renderBaseStats">renderBaseStats</a></li><li><a href="global.html#renderBigCard">renderBigCard</a></li><li><a href="global.html#renderHeader">renderHeader</a></li><li><a href="global.html#renderInfos">renderInfos</a></li><li><a href="global.html#renderMoves">renderMoves</a></li><li><a href="global.html#renderSmallCard">renderSmallCard</a></li><li><a href="global.html#renderTypeDivs">renderTypeDivs</a></li><li><a href="global.html#showBigCard">showBigCard</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Fri Apr 15 2022 18:30:49 GMT+0200 (Mitteleuropäische Sommerzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

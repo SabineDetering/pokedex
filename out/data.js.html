@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: data.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: data.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * extract relevant data from API-response
+ * @param {*} pokemon 
+ */
+function extractFeatures(pokemon) {
+    let pokeId = pokemon.id;
+    let name = pokemon.name;
+    let image = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${pokeId}.png`;
+    let types = extractTypes(pokemon);
+    let mainType = types.mainType;
+    let secondType = types.secondType;
+    let species = capFirstLetter(pokemon.species.name);
+    let height = (pokemon.height * 10).toString() + ' cm';
+    let weight = (pokemon.weight / 10).toFixed(1) + ' kg';
+    let abilities = extractAbilities(pokemon);
+    let hp = pokemon.stats[0].base_stat;
+    let attack = pokemon.stats[1].base_stat;
+    let defense = pokemon.stats[2].base_stat;
+    let specialAttack = pokemon.stats[3].base_stat;
+    let specialDefense = pokemon.stats[4].base_stat;
+    let speed = pokemon.stats[5].base_stat;
+    let baseStatTotal = hp + attack + defense + specialAttack + specialDefense + speed;
+    let baseStatAvg = (baseStatTotal / 6).toFixed(1);
+    let baseExp = pokemon.base_experience;
+    let moves = extractMoves(pokemon);
+    let items = pokemon.items;
+
+    pokeExtract[pokeId] = { pokeId, name, image, mainType, secondType, species, height, weight, abilities, hp, attack, defense, specialAttack, specialDefense, speed, baseStatTotal, baseStatAvg, baseExp, moves, items };
+}
+
+/**
+ * extract types from API-data
+ * @param {json} pokemon 
+ * @returns {mainType, secondType}
+ */
+function extractTypes(pokemon) {
+    let types = pokemon.types;
+    let mainType = types[0].type.name;
+    let secondType = '';
+    if (types.length == 2) {
+        secondType = types[1].type.name;
+    }
+    return { mainType, secondType }
+}
+/**
+ * extract abilities from API-data
+ * @param {json} pokemon 
+ * @returns string, comma separated list of abilities 
+ */
+function extractAbilities(pokemon) {
+    let abilities = capFirstLetter(pokemon.abilities[0].ability.name);
+    for (let i = 1; i &lt; pokemon.abilities.length; i++) {
+        abilities += ', ' + capFirstLetter(pokemon.abilities[i].ability.name);
+    }
+    return abilities;
+}
+/**
+ * extract moves from API-data
+ * @param {json} pokemon 
+ * @returns array of moves
+ */
+function extractMoves(pokemon) {
+    let moves = [];
+    for (let i = 0; i &lt; pokemon.moves.length; i++) {
+        moves.push(capFirstLetter(pokemon.moves[i].move.name));
+    }
+    return moves;
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#changeTabColor">changeTabColor</a></li><li><a href="global.html#closeBigCard">closeBigCard</a></li><li><a href="global.html#colorizeBorder">colorizeBorder</a></li><li><a href="global.html#colorizeCard">colorizeCard</a></li><li><a href="global.html#colorizeInnerBorders">colorizeInnerBorders</a></li><li><a href="global.html#defineOnclickFct">defineOnclickFct</a></li><li><a href="global.html#extractAbilities">extractAbilities</a></li><li><a href="global.html#extractFeatures">extractFeatures</a></li><li><a href="global.html#extractMoves">extractMoves</a></li><li><a href="global.html#extractTypes">extractTypes</a></li><li><a href="global.html#findPokeId">findPokeId</a></li><li><a href="global.html#findPokemon">findPokemon</a></li><li><a href="global.html#findPokeName">findPokeName</a></li><li><a href="global.html#getHeartSrc">getHeartSrc</a></li><li><a href="global.html#hideFavorites">hideFavorites</a></li><li><a href="global.html#keydown">keydown</a></li><li><a href="global.html#loadAndRender">loadAndRender</a></li><li><a href="global.html#loadFavorites">loadFavorites</a></li><li><a href="global.html#loadNext">loadNext</a></li><li><a href="global.html#loadPokemon">loadPokemon</a></li><li><a href="global.html#loadPokemonName">loadPokemonName</a></li><li><a href="global.html#loadTil">loadTil</a></li><li><a href="global.html#renderAbout">renderAbout</a></li><li><a href="global.html#renderAllCards">renderAllCards</a></li><li><a href="global.html#renderBaseStats">renderBaseStats</a></li><li><a href="global.html#renderBigCard">renderBigCard</a></li><li><a href="global.html#renderHeader">renderHeader</a></li><li><a href="global.html#renderInfos">renderInfos</a></li><li><a href="global.html#renderMoves">renderMoves</a></li><li><a href="global.html#renderSmallCard">renderSmallCard</a></li><li><a href="global.html#renderTypeDivs">renderTypeDivs</a></li><li><a href="global.html#saveFavorites">saveFavorites</a></li><li><a href="global.html#searchValueIsInteger">searchValueIsInteger</a></li><li><a href="global.html#showBigCard">showBigCard</a></li><li><a href="global.html#showFavorites">showFavorites</a></li><li><a href="global.html#toggleFavorite">toggleFavorite</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Fri Apr 15 2022 18:30:09 GMT+0200 (Mitteleuropäische Sommerzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
