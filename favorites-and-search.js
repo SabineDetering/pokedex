@@ -15,6 +15,8 @@ function loadFavorites() {
     }
     saveFavorites();
 }
+
+
 /**
  * save favorites
  */
@@ -22,6 +24,8 @@ function saveFavorites() {
     let favString = JSON.stringify(favorites);
     localStorage.setItem('favorites', favString);
 }
+
+
 /**
  * selects heart image according to favorite status
  * @param {integer} id of pokemon
@@ -33,6 +37,7 @@ function getHeartSrc(id) {
     } else { return './img/heart-outline.png'; }
 }
 
+
 /**
  * switch favorite status
  * @param {integer} id of pokemon
@@ -42,6 +47,8 @@ function toggleFavorite(id) {
     getId('heart').src = getHeartSrc(id);
     saveFavorites();
 }
+
+
 /**
  * show favorites only (small cards)
  * toggle heart
@@ -62,6 +69,8 @@ function showFavorites() {
     getId('heart-blue').src = "./img/heart-blue-filled.png";
     getId('footer-button').classList.add('d-none');
 }
+
+
 /**
  * return to all cards
  * toggle heart
@@ -74,12 +83,7 @@ function hideFavorites() {
     getId('footer-button').classList.remove('d-none');
 }
 //////////////////////////////////////////////////////////////////////
-// getId("searchField").addEventListener("keydown", function () {
-//     if (e.key == "Enter") {
-//         e.preventDefault();
-//         findPokemon();
-//     }
-// });
+
 /**
  * allow return key as affirmation of input field
  * not working!
@@ -90,6 +94,8 @@ function keydown(e) {
         findPokemon();
     }
 }
+
+
 /**
  * find searched pokemon
  */
@@ -102,6 +108,7 @@ function findPokemon() {
         findPokeName(searchValue);
     }
 }
+
 
 /**
  * returns true if search value is an integer
@@ -116,6 +123,8 @@ function searchValueIsInteger(searchValue) {
         return false;
     }
 }
+
+
 /**
  * show searched pokemon
  * if necessary load it before
@@ -134,6 +143,8 @@ async function findPokeId(index) {
         } else { alert('Es wurde kein passendes Pokémon gefunden. Bitte geben Sie eine Zahl zwischen 1 und 898 ein.'); }
     }
 }
+
+
 /**
  * show searched pokemon
  * if necessary load it before

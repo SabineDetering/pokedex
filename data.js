@@ -28,6 +28,7 @@ function extractFeatures(pokemon) {
     pokeExtract[pokeId] = { pokeId, name, image, mainType, secondType, species, height, weight, abilities, hp, attack, defense, specialAttack, specialDefense, speed, baseStatTotal, baseStatAvg, baseExp, moves, items };
 }
 
+
 /**
  * extract types from API-data
  * @param {json} pokemon 
@@ -42,6 +43,8 @@ function extractTypes(pokemon) {
     }
     return { mainType, secondType }
 }
+
+
 /**
  * extract abilities from API-data
  * @param {json} pokemon 
@@ -54,6 +57,8 @@ function extractAbilities(pokemon) {
     }
     return abilities;
 }
+
+
 /**
  * extract moves from API-data
  * @param {json} pokemon 
