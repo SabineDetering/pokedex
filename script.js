@@ -2,23 +2,20 @@
 let pokeExtract = [];
 //current pokemon
 let currPokemon;
-//number of loaded pokemon without gaps (there might single pokemon with higher ids that were loaded via search)
+//number of loaded pokemon without gaps (there might be single pokemon with higher ids that were loaded via search)
 let maxNumber = 0;
 //array of booleans to mark favorite pokemon
 let favorites = [];
 
 /////////////////////////////////////////////////////////////
+// helper functions
 function getId(id) {
     return document.getElementById(id);
 }
 function capFirstLetter(string) {
     return string[0].toUpperCase() + string.slice(1);
 }
-// /*not working*/
-// let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-// let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-//     return new bootstrap.Tooltip(tooltipTriggerEl)
-// })
+
 /////////////////////////////////////////////////////////////
 /**
  * intiates loading and rendering additional pokemon (parallel load)
@@ -98,7 +95,7 @@ function renderAllCards() {
             renderSmallCard(i);
         };
     }
-    // invisible card for layout purposes
+    // invisible cards for layout purposes
     getId('small-cards').innerHTML += `<div class="small-card" style="visibility:hidden;"></div>`;
     getId('small-cards').innerHTML += `<div class="small-card" style="visibility:hidden;"></div>`;
     getId('small-cards').innerHTML += `<div class="small-card" style="visibility:hidden;"></div>`;
@@ -190,6 +187,8 @@ function closeBigCard() {
     getId('arrow-left').classList.remove('invisible');
     getId('blur').classList.add('d-none');
     document.body.style = 'overflow:auto;';
+    let root = document.documentElement;
+    root.style.setProperty('--current-color', 'grey');
 }
 
 
@@ -199,7 +198,8 @@ function closeBigCard() {
  */
 function renderBigCard(id) {
     currPokemon = pokeExtract[id];
-    getId('big-card').style.border = `2px solid var(--bg-${currPokemon.mainType})`;
+    let root = document.documentElement;
+    root.style.setProperty('--current-color', `var(--bg-${currPokemon.mainType}`);
     renderHeader();
     renderInfos();
     defineOnclickFct(id);
@@ -208,8 +208,8 @@ function renderBigCard(id) {
 
 /**
  * define onclick functions for arrows and heart
- * moving to neighboring pokemon is only allowed for ids upto maxNumber
- * @param {integer} id of pokemon
+ * arrow left on first pokemon closes big card, arrow right on last (block-loaded) pokemon loads the next pokemon
+ * @param {integer} - id of pokemon
  */
 function defineOnclickFct(id) {
     if (id > 1) {
@@ -218,7 +218,7 @@ function defineOnclickFct(id) {
         getId('arrow-left').onclick = function () { closeBigCard(); }
     }
 
-    if (id < pokeExtract.length - 1) {
+    if (id < maxNumber - 1) {
         getId('arrow-right').onclick = function () { renderBigCard(id + 1); };
     } else {
         getId('arrow-right').onclick = async function () { await loadNext(1); renderBigCard(id + 1); }
@@ -263,31 +263,6 @@ function renderInfos() {
     renderAbout();
     renderBaseStats();
     renderMoves();
-    colorizeInnerBorders();
-}
-
-
-/**
- * use main type color for all borders in the card
- */
-function colorizeInnerBorders() {
-    colorizeBorder("td");
-    colorizeBorder("tfoot");
-    colorizeBorder(".move");
-    colorizeBorder("td");
-    colorizeBorder("td");
-}
-
-
-/**
- * apply main type color to borders of element
- * @param {id} of element 
- */
-function colorizeBorder(element) {
-    let elements = document.querySelectorAll(`${element}`);
-    for (let i = 0; i < elements.length; i++) {
-        elements[i].style.borderColor = `var(--bg-${currPokemon.mainType}`;
-    }
 }
 
 
@@ -297,12 +272,10 @@ function colorizeBorder(element) {
 function changeTabColor() {
     let links = document.querySelectorAll(".nav-link");
     for (let i = 0; i < links.length; i++) {
-        links[i].style.color = "black";
         links[i].style.backgroundColor = "#f9f9de";
     }
     let active = document.querySelector(".nav-link.active");
-    active.style.backgroundColor = `var(--bg-${currPokemon.mainType}`;
-    active.style.color = "#f9f9de";
+    active.style.backgroundColor = 'var(--current-color)';
 }
 
 
