@@ -60,9 +60,50 @@
         </div>
 
         <!-- footer -->
-        <button id="footer-button" type="button" class="btn btn-pokeblue  my-4 py-2 px-4 disabled"
-            onclick="loadNext(10)"> Pokémon sind unterwegs
-        </button>
+        <div class="d-flex justify-content-between">
+            <button id="about-button" type="button" class="btn btn-pokeblue my-4 py-2 px-4" data-bs-toggle="modal"
+                data-bs-target="#legalModal"> About
+            </button>
+            <button id="footer-button" type="button" class="btn btn-pokeblue my-4 py-2 px-4 disabled"
+                onclick="loadNext(10)">
+                Pokémon sind unterwegs
+            </button>
+        </div>
+    </div>
+
+    <!-- modal for legal notice -->
+    <div class="modal fade" id="legalModal" tabindex="-1" aria-labelledby="legalModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="legalModalLabel">Impressum</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Angaben gemäß § 5 TMG</p>
+                    <p>Sabine Detering <br>
+                        Heideweg 14A<br>
+                        76149 Karlsruhe <br>
+                    </p>
+                    <p> <strong>Vertreten durch: </strong><br>
+                        Sabine Detering<br>
+                    </p>
+                    <p><strong>Kontakt:</strong> <br>
+                        Telefon: 0152-53458810<br>
+                        E-Mail: <a href='mailto:sabine.detering@web.de'>sabine.detering@web.de</a><br>
+                    </p>
+                    <br>
+                    <p> Impressum vom <a href="https://www.impressum-generator.de">Impressum Generator</a> der <a
+                            href="https://www.kanzlei-hasselbach.de/">Kanzlei Hasselbach, Rechtsanwälte für Arbeitsrecht und
+                            Familienrecht</a>
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-pokeblue" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- settings for single card view -->
