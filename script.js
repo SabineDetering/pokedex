@@ -63,10 +63,15 @@ async function loadTil(end) {
  */
 async function loadPokemonName(name) {
     let url = `https://pokeapi.co/api/v2/pokemon/${name}`;
+    try{
     let response = await fetch(url);
     pokemon = await response.json();
     extractFeatures(pokemon);
-    return pokemon.id;
+        return pokemon.id;
+    }
+    catch {
+        return null;
+    }
 }
 
 

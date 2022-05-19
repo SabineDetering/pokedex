@@ -36,7 +36,7 @@
                     title="Suche dein Lieblings-Pokémon über seine Nummer oder seinen englischen Namen. Bei schon geladenen Pokemon reicht auch ein Teil des Namens."
                     id="searchField" onkeydown="keydown(event)">
                 <button id="search-button" class="btn btn-outline btn-pokeblue" type="button"
-                    onclick="findPokemon()">Suchen</button>
+                    onclick="findPokemon('desktop')">Suchen</button>
             </div>
 
             <img id="heart-blue" src="./img/heart-blue-outline.png" alt="Favoriten anzeigen" title="Favoriten anzeigen"
@@ -49,9 +49,17 @@
                 <input type="text" class="form-control" placeholder="Nummer oder englischer Name"
                     data-bs-toggle="tooltip" data-bs-placement="bottom"
                     title="Suche dein Lieblings-Pokémon über seine Nummer oder seinen englischen Namen. Bei schon geladenen Pokemon reicht auch ein Teil des Namens."
-                    id="searchField" onkeydown="keydown">
+                    id="searchField-mobile" onkeydown="keydown">
                 <button id="search-button" class="btn btn-outline btn-pokeblue" type="button"
-                    onclick="findPokemon()">Suchen</button>
+                    onclick="findPokemon('mobile')">Suchen</button>
+            </div>
+        </div>
+
+        <div id="error-toast" class="toast position-fixed top-0 start-50 translate-middle-x  m-5 p-3" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div id="toast-message" class="toast-body">                  
+                </div>
+                <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
         </div>
 

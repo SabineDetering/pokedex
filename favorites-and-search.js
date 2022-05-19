@@ -1,3 +1,5 @@
+//functions concerning favorites
+
 /**
  * load favorites from storage if available
  * if no info available set favorite to false
@@ -83,25 +85,21 @@ function hideFavorites() {
     getId('footer-button').classList.remove('d-none');
 }
 //////////////////////////////////////////////////////////////////////
+//functions concerning search
 
 /**
- * allow return key as affirmation of input field
- * not working!
- * @param {*} e 
+ * find searched pokemon and empty search field
+ * trigger search functions dependent on type of input
  */
-function keydown(e) {
-    if (e.keyCode == 13) {
-        findPokemon();
+function findPokemon(type) {
+    let searchField;
+    if (type == 'desktop') {
+        searchField = getId('searchField');
+    } else {
+        searchField = getId('searchField-mobile');
     }
-}
-
-
-/**
- * find searched pokemon
- */
-function findPokemon() {
-    searchValue = getId('searchField').value;
-    getId('searchField').value='';
+    searchValue = searchField.value;
+    searchField.value = '';
     if (searchValueIsInteger(searchValue)) {
         findPokeId(searchValue);
     } else {
@@ -126,50 +124,63 @@ function searchValueIsInteger(searchValue) {
 
 
 /**
- * show searched pokemon
+ * show searched pokemon, if searched by id
  * if necessary load it before
- * @param {integer} index id of searched pokemon
+ * @param {integer} index - id of searched pokemon
  */
 async function findPokeId(index) {
     let id = parseInt(index);
     if (pokeExtract[id]) {
-        showBigCard(id)
+        showBigCard(id);
     } else {
         if (id > 0 && id < 899) {
             await loadPokemon(id);
             loadFavorites();
             renderAllCards();
             showBigCard(id);
-        } else { alert('Es wurde kein passendes Pokémon gefunden. Bitte geben Sie eine Zahl zwischen 1 und 898 ein.'); }
+        } else {
+            showAlert('Es wurde kein passendes Pokémon gefunden. Bitte geben Sie eine Zahl zwischen 1 und 898 ein.');
+        }
     }
 }
 
 
 /**
- * show searched pokemon
+ * show searched pokemon, if searched by name
  * if necessary load it before
  * @param {string} name 
  */
-async function findPokeName(name) {
-    name = name.toLowerCase();
+async function findPokeName(searchValue) {
+    searchValue = searchValue.toLowerCase();
     let found = false;
-    for (let i = 0; i < pokeExtract.length; i++) {
-        if (pokeExtract[i]) {
-            if (pokeExtract[i].name.includes(name)) {
-                showBigCard(i);
-                found = true;
-                break;
-            }
-        }
+    let foundIndex = pokeExtract.findIndex(
+        function (pokemon) { return pokemon ? pokemon['name'].includes(searchValue) : false }
+    );
+    if (foundIndex != -1) {
+        showBigCard(foundIndex);
+        found = true;
     }
     if (!found) {//not yet loaded
-        id = await loadPokemonName(name);
+        id = await loadPokemonName(searchValue);
         if (id) {
             loadFavorites();
             renderAllCards();
             showBigCard(id);
         } else {
-            alert('Es wurde kein passendes Pokémon gefunden.');
+            showAlert('Es wurde kein passendes Pokémon gefunden.');
         }
     }
+}
+
+
+/**
+ * shows text in toast element as alert (if searched pokemon is not found)
+ * @param {string} text - to be shown as alert message
+ */
+function showAlert(text) {
+    let errorToast = getId('error-toast');
+    let toastMessage = getId('toast-message');
+    toastMessage.innerHTML = text;
+    const toast = new bootstrap.Toast(errorToast);
+    toast.show();
 }
